@@ -1,8 +1,6 @@
 import argparse
 import pandas as pd
 from datetime import datetime
-import re
-
 
 
 def main():
@@ -19,12 +17,10 @@ def main():
     start_date = pd.to_datetime(args.start, format='%m/%d/%Y')
     end_date = pd.to_datetime(args.end, format='%m/%d/%Y')
     filtered_df = df.loc[(df[1] >= start_date) & (df[1] <= end_date)]
+    result_df = filtered_df.groupby([5, 25]).size().reset_index(name='count')
 
-    filtered_df[23] = filtered_df[23].apply(lambda x: re.sub(r'^\d+\s', '', x))
-    result_df = filtered_df.groupby([5, 23]).size().reset_index(name='count')
     
     result_df.columns = ['complaint type', 'borough', 'count']
-
 
     if args.output:
         result_df.to_csv(args.output, index=False)
